@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SplitOrder Daveti</title>
+<meta name="robots" content="noindex">
+<style>
+  :root { --bg:#eef2f0; --card:#ffffff; --fg:#15201c; --muted:#5d6b66; --accent:#2343c4; --line:#d6ddd9; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#0e1412; --card:#1a2421; --fg:#e6ede9; --muted:#97a49f; --accent:#8ea2ff; --line:#2c3833; } }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--fg); font:16px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+  main { max-width:440px; margin:0 auto; padding:40px 16px; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:20px; padding:24px; text-align:center; }
+  h1 { font-size:1.4rem; margin:8px 0 4px; }
+  p { color:var(--muted); margin:6px 0; }
+  .code { display:inline-block; margin:16px 0; padding:8px 16px; border:2px solid var(--accent); border-radius:10px; color:var(--accent);
+          font:700 2rem/1 ui-monospace, Menlo, monospace; letter-spacing:.3em; }
+  a.btn { display:block; margin-top:12px; padding:14px; border-radius:14px; text-decoration:none; font-weight:700; }
+  a.primary { background:var(--accent); color:#fff; }
+  @media (prefers-color-scheme: dark) { a.primary { color:#0b1233; } }
+  a.secondary { border:1px solid var(--line); color:var(--fg); }
+  .logo { width:56px; height:56px; border-radius:16px; background:#2343c4; display:inline-flex; align-items:center; justify-content:center; }
+</style>
+</head>
+<body>
+<main>
+  <div class="card">
+    <div class="logo" aria-hidden="true">
+      <svg width="40" height="40" viewBox="22 24 64 64" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M32 52 L54 34 L76 52 L76 76 L32 76 Z"/><circle cx="54" cy="52" r="7" fill="#fff" stroke="none"/><rect x="51.5" y="57" width="5" height="13" fill="#fff" stroke="none"/>
+      </svg>
+    </div>
+    <h1 id="title">SplitOrder'da bir eve davet edildin</h1>
+    <p id="lead">Ev masraflarını ve ev işlerini ev arkadaşlarınla birlikte takip et.</p>
+    <div class="code" id="code">······</div>
+    <a class="btn primary" id="open" href="#">Uygulamada aç</a>
+    <a class="btn secondary" id="store" href="https://play.google.com/store/apps/details?id=com.elfdev.splitorder">Google Play'den indir</a>
+    <p id="hint" style="margin-top:16px;font-size:.9rem">Uygulamayı kurduktan sonra “Davet koduyla katıl”a dokunup bu kodu gir.</p>
+  </div>
+</main>
+<script>
+  // ?c=K7M2QX → kodu göster; Android'de "Uygulamada aç" uygulamayı kod dolu katılma ekranıyla açar
+  const ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  const raw = (new URLSearchParams(location.search).get("c") || "").toUpperCase();
+  const code = raw.length === 6 && [...raw].every(ch => ALPHABET.includes(ch)) ? raw : null;
+  const store = "https://play.google.com/store/apps/details?id=com.elfdev.splitorder";
+  const en = !navigator.language.toLowerCase().startsWith("tr");
+  if (en) {
+    document.documentElement.lang = "en";
+    document.title = "SplitOrder invite";
+    document.getElementById("title").textContent = "You're invited to a home on SplitOrder";
+    document.getElementById("lead").textContent = "Track house expenses and chores together with your housemates.";
+    document.getElementById("open").textContent = "Open in the app";
+    document.getElementById("store").textContent = "Get it on Google Play";
+    document.getElementById("hint").textContent = "After installing, tap “Join with invite code” and enter this code.";
+  }
+  const open = document.getElementById("open");
+  if (code) {
+    document.getElementById("code").textContent = code;
+    open.href = "intent://join/" + code + "#Intent;scheme=splitorder;package=com.elfdev.splitorder;S.browser_fallback_url=" + encodeURIComponent(store) + ";end";
+  } else {
+    document.getElementById("code").style.display = "none";
+    open.style.display = "none";
+  }
+</script>
+</body>
+</html>
